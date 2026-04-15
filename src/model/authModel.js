@@ -29,7 +29,7 @@ const authSchema = new mongoose.Schema(
       default: "local",
     },
     googleId: {
-      type: String, //store goggle orfacebook id
+      type: String, //store goggle or facebook id
       default: null,
     },
     role: {
@@ -49,6 +49,20 @@ const authSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+     refreshToken: {
+        type: String,
+        default: null
+    }, //user can have only one refresh token at a time, if user login from another device then previous refresh token will be invalidated
+
+    //refreshTokens: [String]--> for multiple refresh tokens if user login from multiple devices
+
+    paswordResetToken:{
+        type:String,
+    },
+    
+    passwordResetTokenExpiry:{
+        type:Date,
+    }
   },
   { timestamps: true }
 );
@@ -68,17 +82,17 @@ authSchema.methods.comparePassword = async function (userPassword) {
 };
 
 //otp methods
-authSchema.methods.sendOtp=async function (otp){
+// authSchema.methods.sendOtp=async function (otp){
 
-    this.otp=await bcrypt.hash(otp,10);
-    this.otpExpiry=Date.now()+10*60*1000;
+//     this.otp=await bcrypt.hash(otp,10);
+//     this.otpExpiry=Date.now()+10*60*1000;
 
-};
+// };
 
-authSchema.methods.verifyOtp=async function(enteredOtp){
-    if(!this.otp|| thhis.otpExpiry<Date.now()) return false; //date.now cuurent date or tym ko btata hai 
-    return await bcrypt.compare(enteredOtp,this.otp)
-}
+// authSchema.methods.verifyOtp=async function(enteredOtp){
+//     if(!this.otp|| thhis.otpExpiry<Date.now()) return false; //date.now cuurent date or tym ko btata hai 
+//     return await bcrypt.compare(enteredOtp,this.otp)
+// }
 
 export const User = mongoose.model("User", authSchema);
 
