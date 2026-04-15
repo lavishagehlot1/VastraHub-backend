@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h2>Login with Google</h2>
+
+    <div id="g_id_onload"
+         data-client_id="1001641712895-qlnhuel2nn9jf5873cf34hms509upht3.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+
+    <div class="g_id_signin"></div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+      function handleCredentialResponse(response) {
+        console.log("ID Token:", response.credential);
+        alert("ID Token copied to console!");
+      }
+    </script>
+  </body>
+</html>
