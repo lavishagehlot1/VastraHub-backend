@@ -1,9 +1,14 @@
 import express from 'express';
-import { googleAuthCallback, loginUser, registerUser } from '../controller/authController/authController.js';
+import { googleAuthCallback, loginUser, refreshToken, registerUser } from '../controller/authController/authController.js';
 import passport from "../config/passport.js";
+import { auth } from 'google-auth-library';
 const authRoute=express.Router();
+
+
 authRoute.post('/register',registerUser);
 authRoute.post('/login',loginUser);
+
+authRoute.post('/refreshToken',refreshToken);
 
 //redirect user to google login
 authRoute.get('/google',passport.authenticate('google',{scope:['profile','email']}));
