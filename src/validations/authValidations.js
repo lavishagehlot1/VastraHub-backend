@@ -1,7 +1,7 @@
 import Joi from 'joi';
 export const registerSchema=Joi.object({
-    userName:Joi.string.min(3).required(),
-    userEmail:Joi.string()
+    name:Joi.string().min(3).required(),
+    email:Joi.string()
     .email({tlds:{allow:false}}) //avoid strict TLD error
     .required()
     .message({
@@ -13,8 +13,8 @@ export const registerSchema=Joi.object({
 });
 
 export const loginSchema=Joi.object({
-    userName:Joi.string.min(3).required(),
-    userEmail:Joi.string()
+    name:Joi.string().min(3).required(),
+    email:Joi.string()
     .email({tlds:{allow:false}}) //avoid strict TLD error
     .required()
     .message({

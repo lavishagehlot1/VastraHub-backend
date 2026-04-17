@@ -16,6 +16,7 @@ const sellerSchema=new mongoose.Schema({
     businessName:{
         type:String,
         trim:true,
+    
     },
     businessType:{
         type:String,
