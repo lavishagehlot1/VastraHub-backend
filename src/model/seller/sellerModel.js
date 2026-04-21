@@ -9,7 +9,7 @@ const sellerSchema=new mongoose.Schema({
     },
     status:{
         type:String,
-        enum:['IN_PROGRESS','UNDER_REVIEW','APPROVED','REJECTED'],
+        enum:['IN_PROGRESS','UNDER_REVIEW','DRAFT','APPROVED','REJECTED'],
         default:'IN_PROGRESS'
     },
     //Bussiness Info
@@ -32,7 +32,11 @@ const sellerSchema=new mongoose.Schema({
     bankDetails:{
         accountHolderName:String,
         accountNumber:String ,//encrypt this
-        ifscCode:String
+        ifscCode:String,
+        isVerified:{
+            type:Boolean,
+            default:false
+        }
     },
     //Admin action
     rejectionReason:{

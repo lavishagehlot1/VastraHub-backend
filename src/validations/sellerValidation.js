@@ -1,5 +1,5 @@
 import Joi from 'joi';
-export const sellerSchema=Joi.object({
+export const sellerProfileSchema=Joi.object({
 
     businessName:Joi.string().required(),
     businessType:Joi.string().valid('individual','company'),
@@ -10,9 +10,13 @@ export const sellerSchema=Joi.object({
     .required(),
     bankDetails: Joi.object({
     accountHolderName: Joi.string().required(),
-    accountNumber: Joi.string().required(),
-    ifscCode: Joi.string().required()
-  }),
-    rejectionReason:Joi.string().allow("",null)
+    accountNumber: Joi.string().pattern(/^[0-9]{9,18}$/).required(),
+    ifscCode: Joi.string()
+    .uppercase()
+    .pattern(/^[A-Z]{4}0[A-Z0-9]{6}$/)
+    .message("Invalid IFSC code format")
+    .required()
+}),
+    //rejectionReason:Joi.string().allow("",null)
 
 })
