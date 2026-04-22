@@ -1,57 +1,13 @@
-
-import mongoose from "mongoose";
- const productSchema=new mongoose.Schema({
-    title:{
-        type:String,
-        required:true,
-        trim:true
-    },
-    description:{
-        type:String,
-        required:true,
-        trim:true
-    },
-    price:{
-        type:Number,
-        required:true,
-        min:0
-    },
-    category:{
-        type:String,
-        required:true,
-        trim:true
-    },
-    brand:{
-        type:String,
-        trim:true
-    },
-    stock:{
-        type:Number,
-        min:0
-    },
-    images:[{
-        type:String
-    }],
-    sellerId:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
-        required:true
-    },
-    rating:{
-        type:Number,
-        min:0,
-        max:5,
-        default:0
-    },
-    numReviews:{
-        type:Number,
-        default:0
-    },
-    isActive:{
-        type:Boolean,
-        default:true
-    }
- },{timestamps:true});
-
- const productModel=mongoose.model('product',productSchema);
- export default productModel;
+import express from 'express';
+import { authorization } from '../../middleware/authorization.js';
+import { authorize } from '../../middleware/authorizeRole.js';
+import uploads from '../../middleware/multer.js';
+import { createProduct } from '../../controller/productController.js/productController.js';
+const productRouter=express.Router();
+productRouter.use(authorization);
+productRouter.post('/productCreate',
+    authorize('seller'),
+    uploads.array('images',5),
+    createProduct
+);
+export default productRouter;

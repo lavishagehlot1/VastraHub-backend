@@ -1,3 +1,4 @@
+import { User } from "../model/authModel.js";
 import { verifyToken } from "../services/generateToken.js";
 import statusCode from "../utils/statusCode.js";
 
@@ -15,6 +16,10 @@ export const authorization=async(req,res,next)=>{
             console.log("Token:",token)
             const decode=verifyToken(token,"access");
             console.log("DECODE=",decode);
+            const user=await User.findById(decode.id);
+            if(!user){
+                return res.status(statusCode.UNAUTHORIZED).json({message:"not found"})
+            }
             req.user=decode;
             next();
 
