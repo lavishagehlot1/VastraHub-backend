@@ -77,11 +77,11 @@ export const loginUser=async(req,res,next)=>{
       console.log("User from database",findUser);
         if(!findUser) return res.status(statusCode.BAD_REQUEST).json({message:'User not found,please register first'});
 
-       const accessToken = generateToken({payload:{id:findUser._id},type:"access"});
+       const accessToken = generateToken({payload:{id:findUser._id,role:findUser.role},type:"access"});
         console.log("ACCESS TOKEN:",accessToken);
 
-        console.log("ACCESS SECRET:", process.env.JWT_SECRET);
-        console.log("REFRESH SECRET:", process.env.JWT_REFRESH_SECRET);
+       // console.log("ACCESS SECRET:", process.env.JWT_SECRET);
+        //console.log("REFRESH SECRET:", process.env.JWT_REFRESH_SECRET);
 
         const refreshToken=generateToken({payload:{id:findUser._id},type:"refresh"});
         console.log("REFRESH TOKEN:",refreshToken);
@@ -98,7 +98,7 @@ export const loginUser=async(req,res,next)=>{
             sameSite:"strict",
             maxAge:7*24*60*60*1000 //7 days
         })
-        return res.status(statusCode.SUCCESS).json({message:"User is login sucessfully"})
+        return res.status(statusCode.SUCCESS).json({message:"User is login sucessfully",accessToken})
 
     }catch(err){
         console.log("server error:",err.message,err.name)
