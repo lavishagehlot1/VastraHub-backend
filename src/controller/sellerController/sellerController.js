@@ -1,5 +1,7 @@
 
+import { User } from "../../model/authModel.js";
 import {  seller } from "../../model/seller/sellerModel.js";
+import { generateToken } from "../../services/generateToken.js";
 import statusCode from '../../utils/statusCode.js'
 
 export const applySeller=async(req,res,next)=>{
@@ -181,18 +183,41 @@ export const approveSeller=async(req,res,next)=>{
 
         if(!sellerData) {return res.status(statusCode.BAD_REQUEST).json({message:"Seller not found"})}
 
-        if(sellerData.status!=="DRAFT" && sellerData.status!=="UNDER_REVIEW"){
-            return res.status(statusCode.BAD_REQUEST).json({message:"Seller is not under review"})
-        }
+        // if(sellerData.status!=="DRAFT" && sellerData.status!=="UNDER_REVIEW"){
+        //     return res.status(statusCode.BAD_REQUEST).json({message:"Seller is not under review"})
+        // }
+
+        if (!["DRAFT", "UNDER_REVIEW"].includes(sellerData.status)) {
+    return res.status(400).json({ message: "Invalid status for approval" });
+    }
 
         sellerData.status="APPROVED";
         sellerData.rejectionReason=null;
 
         await sellerData.save();
+        //update the role of the user to seller
+         const updatedUser=await User.findByIdAndUpdate(sellerData.user._id, {
+            role: "seller"
+        },{new:true});
+        console.log("SELLER STATUS:", sellerData.status);
+         console.log("USER ROLE:", updatedUser.role);
+
+        //  Generate new token with updated role
+        const accessToken = generateToken({
+            payload: {
+                id: updatedUser._id,
+                role: updatedUser.role
+            },
+            type: "access"
+        });
+
+       
+        console.log("accessToken:",accessToken);
         return res.status(statusCode.SUCCESS).json({
             success:true,
             message:"You are now seller",
-            data:sellerData
+            data:sellerData,
+            accessToken
         })
     }catch(err){
         console.log("SERVER ERROR:",err.name,err.message);
